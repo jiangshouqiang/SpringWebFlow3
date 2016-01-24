@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+    <!--指明 controller 所在包，并扫描其中的注解-->
+    <context:component-scan base-package="com.gr.jiang.project.controller,com.gr.jiang.*"/>
+    <!--默认的mvc注解映射的支持 -->
+    <mvc:annotation-driven />
+    <!-- 支持异步方法执行 -->
+    <task:annotation-driven />
+    <!--引入applicationContext文件-->
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+            </list>
+        </property>
+    </bean>
+    <!--静态资源访问-->
+    <mvc:default-servlet-handler/>
+    <!--
+    <aop:config>
+          <aop:aspect ref="reqActpect">
+                <aop:pointcut id="reqActpectCut" expression="execution(* main.java.com.gr.jiang.project.controller.*.*(..))" />
+                <aop:around method="doAround" pointcut-ref="reqActpectCut"/>
+          </aop:aspect>
+    </aop:config
+    <aop:config>
+          <aop:aspect ref="audience">
+                <aop:declare-parents types-matching="main.java.com.gr.jiang.project.service.ContentService"
+                                     implement-interface="main.java.com.gr.jiang.project.service.LastService"
+                                     default-impl="main.java.com.gr.jiang.project.service.impl.ContentServiceImpl"/>
+                <aop:before pointcut="execution(* main.java.com.gr.jiang.project.service.impl.ContentServiceImpl.*(..))" method="takeSeats" />
+                <aop:before pointcut="execution(* main.java.com.gr.jiang.project.service.impl.ContentServiceImpl.*(..))" method="turnOffCellPhones"/>
+                <aop:after-returning pointcut="execution(* main.java.com.gr.jiang.project.service.impl.ContentServiceImpl.*(..))" method="applaud"/>
+                <aop:after-throwing pointcut="execution(* main.java.com.gr.jiang.project.service.impl.ContentServiceImpl.*(..))" method="demandRefund"/>
+          </aop:aspect>
+    </aop:config>-->
+    <!--视图解析器,用于支持servlet,jsp视图解析-->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/h5"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <import resource="applicationContext.xml" />
+    <import resource="config/webflow-config.xml"/>
+    <!--bean id="reqActpect" class="main.java.com.gr.jiang.project.common.aspect.ReqAspect"/-->
+</beans>
